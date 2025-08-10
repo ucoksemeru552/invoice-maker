@@ -244,6 +244,12 @@
       const line = tr.querySelector('.line');
       const remove = tr.querySelector('.remove');
 
+    remove.addEventListener('click', () => {
+      tr.remove();
+      recalc();
+      updatePreview();
+    });
+
     function updateLine() {
       let q = parseNumberVal(iqty.value);
       if (q > 64) q = 64;
