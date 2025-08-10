@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>Invoice Generator (Indonesian Format)</title>
+  <link href="style.css" rel="stylesheet"/>
+</head>
+<body>
+  <div class="container">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">
+          <img alt="Crispy Network Logo" src="crispynetnot.png" style="max-width:100%;max-height:100%;object-fit:contain;"/>
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:18px">PT. Crispy Network</div>
+          <div class="small">Jl. Jendral Sudirman No. 69</div>
+          <div class="small">Central Jakarta, Indonesia</div>
+          <div class="small">+62 858-8814-1708</div>
+        </div>
+      </div>
+      <div class="meta">
+        <label style="font-size:12px;color:var(--muted);text-align: left;">Invoice ID</label>
+        <input id="invoice_no" type="text" value="Invoice No. 0500" readonly style="text-align: center;"/>
+        <label style="font-size:12px;color:var(--muted);margin-top:6px;text-align: left;">Date</label>
+        <input id="invoice_date" type="date" value="" readonly style="text-align: center;"/>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="margin-top:12px">
+        <table id="user-table">
+          <thead>
+            <tr>
+              <th style="width:10%">Username</th>
+              <th style="width:10%">Discord</th>
+              <th style="width:10%">Ranks</th>
+            </tr>
+          </thead>
+          <tbody id="user-table-body">
+          </tbody>
+        </table>
+        <div>
+          <input id="nick" placeholder="" autocomplete="off" style="padding:8px; border:1px solid #e6e9ef; border-radius:8px; width:34%; font-size:14px; box-sizing:border-box; margin-top:4px;" type="text"/>
+          <input id="discord" placeholder="" autocomplete="off" style="padding:8px; border:1px solid #e6e9ef; border-radius:8px; width:33%; font-size:14px; box-sizing:border-box; margin-top:4px;" type="text"/>
+          <select id="rank">
+            <option value=""></option>
+            <option value="CUSTOM|1000000">CUSTOM</option>
+            <option value="CRISPY+|570000">CRISPY+</option>
+            <option value="RICH|360000">RICH</option>
+            <option value="MVP++|220000">MVP++</option>
+            <option value="MVP+|180000">MVP+</option>
+            <option value="MVP|140000">MVP</option>
+            <option value="VIP+|90000">VIP+</option>
+          </select>
+        <div class="rank-upgrade-container">
+          <select id="rank-from" class="rank-selection">
+            <option value=""></option>
+            <option value="VIP">VIP (Rp. 50.000)</option>
+            <option value="VIP+">VIP+ (Rp. 80.000)</option>
+            <option value="MVP">MVP (Rp. 140.000)</option>
+            <option value="MVP+">MVP+ (Rp. 180.000)</option>
+            <option value="MVP++">MVP++ (Rp. 220.000)</option>
+            <option value="RICH">RICH (Rp. 360.000)</option>
+            <option value="CRISPY+">CRISPY+ (Rp. 570.000)</option>
+            <option value="CUSTOM">CUSTOM (Rp. 1.000.000)</option>
+          </select>
+          <select id="rank-to" class="rank-selection">
+            <option value=""></option>
+            <option value="VIP">VIP (Rp. 50.000)</option>
+            <option value="VIP+">VIP+ (Rp. 80.000)</option>
+            <option value="MVP">MVP (Rp. 140.000)</option>
+            <option value="MVP+">MVP+ (Rp. 180.000)</option>
+            <option value="MVP++">MVP++ (Rp. 220.000)</option>
+            <option value="RICH">RICH (Rp. 360.000)</option>
+            <option value="CRISPY+">CRISPY+ (Rp. 570.000)</option>
+            <option value="CUSTOM">CUSTOM (Rp. 1.000.000)</option>
+          </select>
+        </div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <table id="items-table">
+          <thead>
+            <tr>
+              <th style="width:48%">Item Name</th>
+              <th class="qty">Quantity</th>
+              <th class="price">Price</th>
+              <th class="price">Line Total</th>
+              <th style="width:48px"></th>
+            </tr>
+          </thead>
+          <tbody id="items-body">
+          </tbody>
+        </table>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button id="add-item">Add Item</button>
+          <button class="ghost" id="clear-items">Clear Items</button>
+        </div>
+
+        <div class="totals">
+          <div class="inner">
+            <div class="totals-row">
+              <div class="small">Subtotal</div>
+              <div id="subtotal">Rp. 0</div>
+            </div>
+            <div class="totals-row">
+              <div class="small">Discount (%)</div>
+              <div>
+                <input id="discount" class="discount" autocomplete="off" placeholder="0" style="width:30px;padding:6px;border-radius:8px;border:1px solid #e6e9ef;text-align:center" type="text" value=""/>
+              </div>
+            </div>
+            <div class="totals-row" style="font-weight:700;font-size:18px">
+              <div>Total</div>
+              <div id="total">Rp. 0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="notes">
+          <div style="font-weight:700;margin-bottom:6px">Notes</div>
+          <textarea id="notes" rows="3"></textarea>
+        </div>
+
+        <div id="message-box" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); justify-content:center; align-items:center; z-index:9999;">
+          <div style="background:#fff; padding:20px 30px; border-radius:10px; max-width:320px; box-shadow:0 2px 10px rgba(0,0,0,0.3); text-align:center;">
+            <p style="font-size:16px; margin-bottom:20px; font-weight:600; color:#d32f2f;">
+              Please fill in both username and discord username before downloading the PDF.
+            </p>
+            <button id="message-box-ok" style="background:#d32f2f; color:#fff; border:none; padding:10px 18px; border-radius:6px; font-weight:600; cursor:pointer;">OK</button>
+          </div>
+        </div>
+
+        <div id="message-box-purchase" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); justify-content:center; align-items:center; z-index:9999;">
+          <div style="background:#fff; padding:20px 30px; border-radius:10px; max-width:320px; box-shadow:0 2px 10px rgba(0,0,0,0.3); text-align:center;">
+            <p style="font-size:16px; margin-bottom:20px; font-weight:600; color:#d32f2f;">
+              Please fill the User Purchased Item before downloading the PDF.
+            </p>
+            <button id="message-box-purchase-ok" style="background:#d32f2f; color:#fff; border:none; padding:10px 18px; border-radius:6px; font-weight:600; cursor:pointer;">OK</button>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="download">Download PDF</button>
+          <button class="ghost" id="reset">Reset</button>
+        </div>
+
+        <div class="preview" id="preview">
+          <div class="inv-head">
+            <div class="inv-logo">
+              <div class="logo">
+                <img alt="Crispy Network Logo" src="crispynetnot.png" style="max-width:100%;max-height:100%;object-fit:contain;"/>
+              </div>
+              <div>
+                <div class="inv-title">PT. Crispy Network</div>
+                <div class="small">Jl. Jendral Sudirman No. 69</div>
+                <div class="small">Central Jakarta, Indonesia</div>
+                <div class="small">+62 858-8814-1708</div>
+              </div>
+            </div>
+            <div style="text-align:right">
+              <div><strong id="p-inv">Invoice No. 0500</strong></div>
+              <div class="small" id="p-date">-</div>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;gap:12px;margin-bottom:12px">
+            <div>
+              <div style="font-weight:700">Billed To</div>
+              <div id="p-nick"></div>
+              <div class="small" id="p-discord"></div>
+              <div id="p-rank" style="margin-top:8px;font-weight:600"></div>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Items</th>
+                <th class="qty">Quantity</th>
+                <th class="price">Price</th>
+                <th class="price">Total</th>
+              </tr>
+            </thead>
+            <tbody id="p-items">
+            </tbody>
+          </table>
+
+          <div style="display:flex;justify-content:flex-end;margin-top:12px">
+            <div style="width:280px">
+              <div class="totals-row">
+                <div class="small">Subtotal</div>
+                <div id="p-sub">Rp. 0</div>
+              </div>
+              <div class="totals-row">
+                <div class="small">Discount</div>
+                <div id="p-disc">Rp. 0</div>
+              </div>
+              <div class="totals-row" style="font-weight:700;font-size:18px">
+                <div>Total</div>
+                <div id="p-total">Rp. 0</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="notesPreview"></div>
+          <div id="cautionPreview" style="margin-top: 10px; font-size: 0.9em; color: #a00;">
+            <strong>Terms:</strong> Invoice Hilang 3x = Struk Pembelian Hangus <br/>
+          </div>
+          <div class="small" style="margin-top:16px">Notes: <span id="p-notes">-</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- libraries for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
